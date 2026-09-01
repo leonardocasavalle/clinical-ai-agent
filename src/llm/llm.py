@@ -10,4 +10,5 @@ class LLMClient:
         """
         Generate a response from the LLM.
         """
+
         return f"LLM response to: {prompt}"
