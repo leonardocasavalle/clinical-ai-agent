@@ -14,4 +14,4 @@ Las medidas generales de prevención incluyen mantener una alimentación saludab
 
 ## Importante
 
-Este documento es material educativo de prueba para el sistema Clinical AI Agent y no constituye una guía médica ni reemplaza la evaluación de un profesional de la salud.
+    Este documento es material educativo de prueba para el sistema Clinical AI Agent y no constituye una guía médica ni reemplaza la evaluación de un profesional de la salud
