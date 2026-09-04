@@ -13,7 +13,6 @@ class SimpleRAG:
         """
         Load all Markdown documents from the documents directory.
         """
-
         documents = []
 
         for file in self.documents_path.glob("*.md"):
@@ -26,7 +25,7 @@ class SimpleRAG:
 
     def retrieve(self, query):
         """
-        Retrieve documents containing relevant words from the query.
+        Retrieve documents ranked by relevant word matches.
         """
 
         documents = self.load_documents()
@@ -35,13 +34,14 @@ class SimpleRAG:
             "que", "qué", "es", "la", "el", "los", "las",
             "de", "del", "un", "una", "unos", "unas",
             "y", "o", "en", "por", "para", "con",
-            "cuáles", "cuales", "como", "cómo"
+            "cuáles", "cuales", "cómo", "como",
+            "qué", "que"
         }
 
         query_words = {
-            word.strip("¿?¡!,.;:")
+            word.strip("¿?¡!.,;:()[]{}\"'")
             for word in query.lower().split()
-            if word.strip("¿?¡!,.;:") not in stop_words
+            if word.strip("¿?¡!.,;:()[]{}\"'") not in stop_words
         }
 
         results = []
@@ -49,7 +49,15 @@ class SimpleRAG:
         for document in documents:
             content_lower = document["content"].lower()
 
-            if any(word in content_lower for word in query_words):
-                results.append(document)
+            score = sum(
+                1
+                for word in query_words
+                if word in content_lower
+            )
 
-        return results
+            if score > 0:
+                results.append((score, document))
+
+        results.sort(key=lambda item: item[0], reverse=True)
+
+        return [document for score, document in results]
