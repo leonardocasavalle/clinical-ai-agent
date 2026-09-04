@@ -30,9 +30,14 @@ class ClinicalAIAgent:
             f"Pregunta: {query}"
         )
 
+        sources = ", ".join(
+            document["source"] for document in documents
+        )
+
         return {
             "agent": self.name,
             "query": query,
             "status": "completed",
-            "response": response
+            "response": response,
+            "sources": sources
         }
