@@ -1,5 +1,6 @@
 from typing import Dict
 from src.llm.llm import LLMClient
+from src.agent.rag import SimpleRAG
 
 
 class ClinicalAIAgent:
@@ -10,13 +11,24 @@ class ClinicalAIAgent:
     def __init__(self, name: str = "Clinical AI Agent"):
         self.name = name
         self.llm = LLMClient()
+        self.rag = SimpleRAG()
 
     def process_query(self, query: str) -> Dict[str, str]:
         """
-        Process a user query using the LLM.
+        Process a user query using the LLM and RAG.
         """
 
-        response = self.llm.generate(query)
+        documents = self.rag.retrieve(query)
+
+        context = "\n\n".join(
+            document["content"] for document in documents
+        )
+
+        response = self.llm.generate(
+            f"Responde la pregunta usando el siguiente contexto:\n\n"
+            f"{context}\n\n"
+            f"Pregunta: {query}"
+        )
 
         return {
             "agent": self.name,
