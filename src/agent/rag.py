@@ -13,6 +13,7 @@ class SimpleRAG:
         """
         Load all Markdown documents from the documents directory.
         """
+
         documents = []
 
         for file in self.documents_path.glob("*.md"):
@@ -27,9 +28,21 @@ class SimpleRAG:
         """
         Retrieve documents containing relevant words from the query.
         """
+
         documents = self.load_documents()
 
-        query_words = set(query.lower().split())
+        stop_words = {
+            "que", "qué", "es", "la", "el", "los", "las",
+            "de", "del", "un", "una", "unos", "unas",
+            "y", "o", "en", "por", "para", "con",
+            "cuáles", "cuales", "como", "cómo"
+        }
+
+        query_words = {
+            word.strip("¿?¡!,.;:")
+            for word in query.lower().split()
+            if word.strip("¿?¡!,.;:") not in stop_words
+        }
 
         results = []
 
